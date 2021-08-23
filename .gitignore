@@ -1,0 +1,8 @@
+# Python caches
+__pycache__/
+
+# Virtual environment
+env/
+
+# Configuration files
+config.json

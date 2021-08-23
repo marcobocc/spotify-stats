@@ -1,0 +1,53 @@
+<center>
+<span id="display">
+</span>
+</center>
+
+<script>
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function fetch_single() {
+        fetch('/listener/update/', {credentials: 'include'})
+        .then((response) => {
+            return response;
+        })
+        .then((response) => {
+            response.text().then((text) => {
+                if (text.length != 0) {
+                    my_json = JSON.parse(text)
+                    document.getElementById('display').innerHTML = '\
+                        <p style="font-size:18px">You have been listening to</p>\
+                        <p style="font-size:30px" id="track_name"></p>\
+                        <p style="font-size:18px">by</h3>\
+                        <p style="font-size:30px" id="artist_name"></p>\
+                        <p style="font-size:18px">for</h3>\
+                        <p style="font-size:40px;color:red" id="curr_listening_time"></p>\
+                        <p style="font-size:18px">seconds</p>\
+                        <p style="font-size:18px">Total listening time: <text id="total_listening_time"></text> seconds</p>\
+                        <p style="font-size:18px">Your record of uninterrupted listening of this track is of <text id="record"></text> seconds</p>\
+                        <p style="font-size:18px">You have listened to this track <text id="play_count"></text> times</p>'
+                    document.getElementById('track_name').innerHTML = my_json.track_name
+                    document.getElementById('artist_name').innerHTML = my_json.artist_name
+                    document.getElementById('curr_listening_time').innerHTML = my_json.curr_listening_time
+                    document.getElementById('total_listening_time').innerHTML = my_json.total_listening_time
+                    document.getElementById('play_count').innerHTML = my_json.play_count
+                    document.getElementById('record').innerHTML = my_json.max_uninterrupted_secs
+                }
+                else {
+                    document.getElementById('display').innerHTML = '<p style="font-size:30px">Spotify is offline</p>'
+                }
+            });
+        });
+    }
+
+    async function fetch_data() {
+        while (true) {
+            fetch_single()
+            await sleep(1000);
+        }
+    }
+
+    fetch_data()
+</script> 
